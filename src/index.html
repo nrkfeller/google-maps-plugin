@@ -1,13 +1,37 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <link rel="stylesheet" type="text/css" href="./style/main.css">
     <script src="./js/test.js"></script>
-  </head>
-  <body>
+</head>
+
+<body>
+
+<div class='mapandlist'>
     <div id="map"></div>
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByyuocMAc-YxkzhInuQT3kDNIsbK5Z7BQ&libraries=visualization&callback=initMap">
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByyuocMAc-YxkzhInuQT3kDNIsbK5Z7BQ&libraries=visualization&callback=initMap">
     </script>
-  </body>
+    <div class='list'>
+        <select id="end">
+            <option value="Jalan Solaris, Solaris Mont Kiara,
+50480 Mont Kiara, Wilayah Persekutuan
+Kuala Lumpur, Malaysia">TM point Solaris Mount Kiara</option>
+            <option value="Tm, Jalan 1/62b, 52200 Kuala Lumpur,
+Wilayah Persekutuan Kuala Lumpur,
+Malaysia">
+                TM point Kepong</option>
+            <option value="Jalan PJU 5/17, Kota Damansara,
+47810 Petaling Jaya, Selangor,
+Malaysia">
+                TM point Kota Damansara</option>
+            <option value="91, Jalan SS 21/1a, Damansara Utama,
+47400 Petaling Jaya, Selangor,
+Malaysia">TM point Damansara Utama</option>
+        </select>
+    </div>
+</div>
+
+</body>
+
 </html>

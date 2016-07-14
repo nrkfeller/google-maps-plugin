@@ -1,3 +1,21 @@
-html, body { height: 100%; margin: 0; padding: 0; }
-#map { width: 750px;
-        height: 750px; }
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#mapandlist {
+    width: 1000px;
+    border: 1px solid black;
+    overflow: hidden; /* will contain if #first is longer than #second */
+}
+#map {
+  width: 750px;
+  height: 750px;
+    float:left; /* add this */
+    border: 1px solid blue;
+    display: inline-block;
+}
+#list {
+    display: inline-block;
+}

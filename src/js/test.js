@@ -4,23 +4,25 @@
 var map;
 // Create a new blank array for all the listing markers.
 var markers = [];
+var styles = [  {    featureType: 'water',    stylers: [      { color: '#f15922' }    ]  },{    featureType: 'administrative',    elementType: 'labels.text.stroke',    stylers: [    { color: '#ffffff' },      { weight: 6 }    ]  },{    featureType: 'administrative',    elementType: 'labels.text.fill',    stylers: [      { color: '#e85113' }    ]},{    featureType: 'road.highway',    elementType: 'geometry.stroke',    stylers: [      { color: '#efe9e4' },      { lightness: -40 }    ]  },{    featureType: 'transit.station',    stylers: [      { weight: 9 },      { hue: '#e85113' }    ]  },{    featureType: 'road.highway',    elementType: 'labels.icon',    stylers: [      { visibility: 'off' }    ]  },{    featureType: 'water',    elementType: 'labels.text.stroke',    stylers: [      { lightness: 100 }    ]  },{    featureType: 'water',    elementType: 'labels.text.fill',stylers: [      { lightness: -100 }    ]  },{    featureType: 'poi',    elementType: 'geometry',    stylers: [      { visibility: 'on' },      { color: '#f0e4d3' }    ]  },{    featureType: 'road.highway',    elementType: 'geometry.fill',    stylers: [      { color: '#efe9e4' },      { lightness: -25 }    ]  }];
 
 function initMap() {
-    var styles = [  {    featureType: 'water',    stylers: [      { color: '#19a0d8' }    ]  },{    featureType: 'administrative',    elementType: 'labels.text.stroke',    stylers: [    { color: '#ffffff' },      { weight: 6 }    ]  },{    featureType: 'administrative',    elementType: 'labels.text.fill',    stylers: [      { color: '#e85113' }    ]},{    featureType: 'road.highway',    elementType: 'geometry.stroke',    stylers: [      { color: '#efe9e4' },      { lightness: -40 }    ]  },{    featureType: 'transit.station',    stylers: [      { weight: 9 },      { hue: '#e85113' }    ]  },{    featureType: 'road.highway',    elementType: 'labels.icon',    stylers: [      { visibility: 'off' }    ]  },{    featureType: 'water',    elementType: 'labels.text.stroke',    stylers: [      { lightness: 100 }    ]  },{    featureType: 'water',    elementType: 'labels.text.fill',stylers: [      { lightness: -100 }    ]  },{    featureType: 'poi',    elementType: 'geometry',    stylers: [      { visibility: 'on' },      { color: '#f0e4d3' }    ]  },{    featureType: 'road.highway',    elementType: 'geometry.fill',    stylers: [      { color: '#efe9e4' },      { lightness: -25 }    ]  }];
     // Constructor creates a new map - only center and zoom are required.
-    var KualaLumpur = new google.maps.LatLng(3.13900, 101.68685);
+    var currentLocation = new google.maps.LatLng(3.13900, 101.68685);
+    var directionsService = new google.maps.DirectionsService;
+    var directionsDisplay = new google.maps.DirectionsRenderer;
 
     map = new google.maps.Map(document.getElementById('map'), {
-        center: KualaLumpur,
+        center: currentLocation,
         zoom: 8,
-        styles:styles,
+        styles: styles,
         mapTypeId: google.maps.MapTypeId.MAP
     });
-    // Try HTML5 geolocation.
-    // Try HTML5 geolocation.
+    directionsDisplay.setMap(map);
     var infoWindow = new google.maps.InfoWindow({
         map: map
     });
+
 
     function handleLocationError(browserHasGeolocation, infoWindow, pos) {
         infoWindow.setPosition(pos);
@@ -35,6 +37,8 @@ function initMap() {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
+
+            currentLocation = pos
 
             infoWindow.setPosition(pos);
             infoWindow.setContent('Location found.');
@@ -103,6 +107,26 @@ function initMap() {
     }
     // Extend the boundaries of the map for each marker
     map.fitBounds(bounds);
+
+    var onChangeHandler = function() {
+          calculateAndDisplayRoute(directionsService, directionsDisplay, currentLocation);
+        };
+        //document.getElementById('start').addEventListener('change', onChangeHandler);
+        document.getElementById('end').addEventListener('change', onChangeHandler);
+}
+
+function calculateAndDisplayRoute(directionsService, directionsDisplay, currentLocation) {
+    directionsService.route({
+        origin: currentLocation,
+        destination: document.getElementById('end').value,
+        travelMode: google.maps.TravelMode.DRIVING
+    }, function(response, status) {
+        if (status === google.maps.DirectionsStatus.OK) {
+            directionsDisplay.setDirections(response);
+        } else {
+            window.alert('Directions request failed due to ' + status);
+        }
+    });
 }
 // This function populates the infowindow when the marker is clicked. We'll only allow
 // one infowindow which will open at the marker that is clicked, and populate based
