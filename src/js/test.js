@@ -51,36 +51,34 @@ function initMap() {
         handleLocationError(false, infoWindow, map.getCenter());
     }
 
-    // These are the real estate listings that will be shown to the user.
-    // Normally we'd have these in a database instead.
     var locations = [{
         title: 'TM point Kepong',
         location: {
             lat: 3.196553,
             lng: 101.635133
         },
-        address: '<p>Tm, Jalan 1/62b, 52200 Kuala Lumpur, <br/>Wilayah Persekutuan Kuala Lumpur, <br/>Malaysia</p>'
+        address: 'Tm, Jalan 1/62b, 52200 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur, Malaysia'
     }, {
         title: 'TM point Damansara Utama',
         location: {
             lat: 3.133546,
             lng: 101.621165
         },
-        address: '<p>91, Jalan SS 21/1a, Damansara Utama, <br/>47400 Petaling Jaya, Selangor, <br/>Malaysia</p>'
+        address: '91, Jalan SS 21/1a, Damansara Utama, 47400 Petaling Jaya, Selangor, Malaysia'
     }, {
         title: 'TM point Kota Damansara',
         location: {
             lat: 3.152391,
             lng: 101.591489
         },
-        address: '<p>Jalan PJU 5/17, Kota Damansara, <br/>47810 Petaling Jaya, Selangor, <br/>Malaysia</p>'
+        address: 'Jalan PJU 5/17, Kota Damansara, 47810 Petaling Jaya, Selangor, Malaysia'
     }, {
         title: 'TM point Solaris Mount Kiara',
         location: {
             lat: 3.173781,
             lng: 101.660250
         },
-        address: '<p>Jalan Solaris, Solaris Mont Kiara, <br/>50480 Mont Kiara, Wilayah Persekutuan <br/>Kuala Lumpur, Malaysia</p>'
+        address: 'Jalan Solaris, Solaris Mont Kiara, 50480 Mont Kiara, Wilayah Persekutuan Kuala Lumpur, Malaysia'
     }];
     var largeInfowindow = new google.maps.InfoWindow();
     var bounds = new google.maps.LatLngBounds();
@@ -113,9 +111,24 @@ function initMap() {
         };
         //document.getElementById('start').addEventListener('change', onChangeHandler);
         document.getElementById('end').addEventListener('change', onChangeHandler);
-}
 
-function calculateAndDisplayRoute(directionsService, directionsDisplay, currentLocation) {
+
+  //   var locationText = ""
+  //
+  //   for (i=0;i < locations.length; i++){
+  //     var title = locations[i].title
+  //
+  //     h4tag = "<h4 id=" + i.toString() + " value=" + locations[i].address + ">" + locations[i].address + "</h4>"
+  //
+  //     locationText += h4tag + "<hr/>"
+  //
+  //     document.getElementById(i.toString()).onclick = calculateAndDisplayRoute(directionsService, directionsDisplay, currentLocation, i.toString())
+  //   }
+  //
+  // document.getElementById("locations").innerHTML = locationText;
+
+}
+function calculateAndDisplayRoute(directionsService, directionsDisplay, currentLocation,i) {
     directionsService.route({
         origin: currentLocation,
         destination: document.getElementById('end').value,
