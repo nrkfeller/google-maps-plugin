@@ -4,6 +4,8 @@ var map;
 var markers = [];
 var myLocationMarker;
 var currentLocation;
+var closestTMPoint;
+var directionsDisplay;
 
 
 function initMap() {
@@ -23,6 +25,28 @@ function initMap() {
     var highlightedIcon = makeMarkerIcon('eb8300');
     //
     currentLocation = new google.maps.LatLng(3.13900, 101.68685);
+
+    // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+            currentLocation = pos;
+
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Location found.');
+            map.setCenter(pos);
+          }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, infoWindow, map.getCenter());
+        }
+
     myLocationMarker = new google.maps.Marker({
         position: currentLocation,
         title: "You Are Here",
@@ -31,6 +55,8 @@ function initMap() {
         id: 999,
         icon: makeMarkerIcon('15bf15')
     });
+
+
     //markers.push(marker);
     myLocationMarker.setMap(map);
     // Create an onclick event to open an infowindow at each marker.
@@ -67,14 +93,39 @@ function initMap() {
             this.setIcon(defaultIcon);
         });
     }
-    document.getElementById('show-listings').addEventListener('click', showListings);
-    document.getElementById('hide-listings').addEventListener('click', hideListings);
+    showListings()
+    // document.getElementById('show-listings').addEventListener('click', showListings);
+    // document.getElementById('hide-listings').addEventListener('click', hideListings);
     document.getElementById('zoom-to-area').addEventListener('click', function() {
          zoomToArea();
        });
     document.getElementById('find-closest').addEventListener('click', findClosest);
 
 
+}
+
+
+function getDirection(m){
+  if(directionsDisplay != null) {
+  directionsDisplay.setMap(null);
+  directionsDisplay = null; }
+  directionsDisplay = new google.maps.DirectionsRenderer();
+  directionsDisplay.setMap(map);
+  document.getElementById("dir-panel").innerHTML = "";
+  directionsDisplay.setPanel(document.getElementById('dir-panel'));
+  var request = {
+      origin : myLocationMarker.position,
+      destination : m.position,
+      travelMode : google.maps.TravelMode.DRIVING
+  };
+  var directionsService = new google.maps.DirectionsService();
+  directionsService.route(request, function(response, status) {
+      if (status == google.maps.DirectionsStatus.OK) {
+          directionsDisplay.setDirections(response);
+      } else {
+            window.alert('Directions request failed due to ' + status);
+          }
+  });
 }
 
 function populateInfoWindow(marker, infowindow) {
@@ -88,6 +139,7 @@ function populateInfoWindow(marker, infowindow) {
             infowindow.marker = null;
         });
     }
+    getDirection(marker)
 }
 
 function rad(x) {return x*Math.PI/180;}
@@ -113,8 +165,19 @@ function findClosest() {
         }
     }
 
-    alert(markers[closest].title);
+    closestTMPoint = markers[closest];
+    console.log(closestTMPoint.position.lat())
+    getDirection(closestTMPoint)
+
+
 }
+
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+                              'Error: The Geolocation service failed.' :
+                              'Error: Your browser doesn\'t support geolocation.');
+      }
 
 function currentLocationMarker(currentLocation){
   myLocationMarker.setPosition(currentLocation)
@@ -168,7 +231,7 @@ function zoomToArea() {
                 currentLocation = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
                 currentLocationMarker(currentLocation);
                 map.setCenter(results[0].geometry.location);
-                map.setZoom(13);
+                map.setZoom(11);
             } else {
                 window.alert('We could not find that location - try entering a more' +
                     ' specific place.');
