@@ -2,9 +2,7 @@
 // https://maps.googleapis.com/maps/api/geocode/json?latlng=33.1262476,-117.3115765&key=AIzaSyByyuocMAc-YxkzhInuQT3kDNIsbK5Z7BQ
 var map;
 var markers = [];
-var clmarker;
 var currentLocation;
-var largeInfowindow ;
 
 
 function initMap() {
@@ -27,7 +25,7 @@ function initMap() {
     currentLocationMarker(currentLocation)
 
     var bounds = new google.maps.LatLngBounds();
-    largeInfowindow = new google.maps.InfoWindow();
+    var largeInfowindow = new google.maps.InfoWindow();
 
     for (var i = 0; i < Locations.length; i++) {
         var position = Locations[i].location;
@@ -77,25 +75,22 @@ function populateInfoWindow(marker, infowindow) {
     }
 }
 
-function currentLocationMarker(currentLocation) {
-    var deleteMarker = function(clmarker) {
-        clmarker.setMap(null);
-    }
-    clmarker = new google.maps.Marker({
-        position: currentLocation,
-        title: "You Are Here",
-        cursor: "Start Point",
-        animation: google.maps.Animation.DROP,
-        id: 999,
-        icon: makeMarkerIcon('15bf15')
-    });
-    //markers.push(marker);
-    // Create an onclick event to open an infowindow at each marker.
-    clmarker.addListener('click', function() {
-        populateInfoWindow(this, largeInfowindow);
-    });
-    clmarker.setMap(map)
+function currentLocationMarker(currentLocation){
+  var marker = new google.maps.Marker({
+      position: currentLocation,
+      title: "You Are Here",
+      cursor: "Start Point",
+      animation: google.maps.Animation.DROP,
+      id: 999,
+      icon: makeMarkerIcon('15bf15')
+  });
+  markers.push(marker);
+  // Create an onclick event to open an infowindow at each marker.
+  marker.addListener('click', function() {
+      populateInfoWindow(this, largeInfowindow);
+  });
 }
+
 function showListings() {
     var bounds = new google.maps.LatLngBounds();
     // Extend the boundaries of the map for each marker and display the marker
@@ -134,14 +129,16 @@ function zoomToArea() {
     } else {
         // Geocode the address/area entered to get the center. Then, center the map
         // on it and zoom in
+        var reslat;
+        var reslng;
         geocoder.geocode({
             address: address
         },
         function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
-                currentLocation = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
-                console.log(results[0].geometry.location.lat(), results[0].geometry.location.lng())
-                currentLocationMarker(currentLocation)
+                reslat = results[0].geometry.location.Pa;
+                reslng = results[0].geometry.location.Qa;
+                //currentLocationMarker(currentLocation);
                 map.setCenter(results[0].geometry.location);
                 map.setZoom(13);
             } else {
