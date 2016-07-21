@@ -2,6 +2,7 @@
 // https://maps.googleapis.com/maps/api/geocode/json?latlng=33.1262476,-117.3115765&key=AIzaSyByyuocMAc-YxkzhInuQT3kDNIsbK5Z7BQ
 var map;
 var markers = [];
+var myLocationMarker;
 var currentLocation;
 
 
@@ -22,7 +23,20 @@ function initMap() {
     var highlightedIcon = makeMarkerIcon('eb8300');
     //
     currentLocation = new google.maps.LatLng(3.13900, 101.68685);
-    currentLocationMarker(currentLocation)
+    myLocationMarker = new google.maps.Marker({
+        position: currentLocation,
+        title: "You Are Here",
+        cursor: "Start Point",
+        animation: google.maps.Animation.DROP,
+        id: 999,
+        icon: makeMarkerIcon('15bf15')
+    });
+    //markers.push(marker);
+    myLocationMarker.setMap(map);
+    // Create an onclick event to open an infowindow at each marker.
+    myLocationMarker.addListener('click', function() {
+        populateInfoWindow(this, largeInfowindow);
+    });
 
     var bounds = new google.maps.LatLngBounds();
     var largeInfowindow = new google.maps.InfoWindow();
@@ -76,19 +90,7 @@ function populateInfoWindow(marker, infowindow) {
 }
 
 function currentLocationMarker(currentLocation){
-  var marker = new google.maps.Marker({
-      position: currentLocation,
-      title: "You Are Here",
-      cursor: "Start Point",
-      animation: google.maps.Animation.DROP,
-      id: 999,
-      icon: makeMarkerIcon('15bf15')
-  });
-  markers.push(marker);
-  // Create an onclick event to open an infowindow at each marker.
-  marker.addListener('click', function() {
-      populateInfoWindow(this, largeInfowindow);
-  });
+  myLocationMarker.setPosition(currentLocation)
 }
 
 function showListings() {
@@ -136,9 +138,8 @@ function zoomToArea() {
         },
         function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
-                reslat = results[0].geometry.location.Pa;
-                reslng = results[0].geometry.location.Qa;
-                //currentLocationMarker(currentLocation);
+                currentLocation = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
+                currentLocationMarker(currentLocation);
                 map.setCenter(results[0].geometry.location);
                 map.setZoom(13);
             } else {
