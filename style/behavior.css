@@ -1,0 +1,29 @@
+div.carousel {
+	overflow: hidden;
+	position: relative;
+}
+
+/* carousel navigation arrows (icons assumed to be 32x32) */
+div.carousel > img.arrow {
+	position: absolute;
+}
+div.carousel > img.left { /* positioned center left */
+	left: 0px;
+	margin-top: -16px;
+	top: 50%;
+}
+div.carousel > img.right { /* positioned center right */
+	right: 0px;
+	margin-top: -16px;
+	top: 50%;
+}
+div.carousel > img.up { /* positioned top center */
+	top: 0px;
+	margin-left: -16px;
+	left: 50%;
+}
+div.carousel > img.down { /* positioned bottom center */
+	bottom: 0px;
+	margin-left: -16px;
+	left: 50%;
+}
